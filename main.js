@@ -1,4 +1,4 @@
-const player= []
+const player= [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
 
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext("2d")
