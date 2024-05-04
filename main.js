@@ -4,10 +4,13 @@ const black= [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
 
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext("2d")
-const w = canvas.width //800
-const h = canvas.height //600
-const size = 60
-const border = 10
+const sizes = {
+  ctxWidth : canvas.width, //800
+  ctxHeight : canvas.height, //600
+  checker : 60,
+  margin : 10,
+  cone: .4 * canvas.height,
+}
 
 const colors = {
   light: "#f4a460",
@@ -18,40 +21,38 @@ const colors = {
 }
 
 const pos = []
-
-
-
 const generateBoardInitPositions = () => {
   
   //br
   for(let i = 5; i>=0; i--)
-    pos.push([border+size*i + w/2 + border*2,h-border])
+    pos.push([sizes.margin+sizes.checker*i + sizes.ctxWidth/2 + sizes.margin*2,sizes.ctxHeight-sizes.margin])
   //bl
   for(let i = 5; i>=0; i--)
-    pos.push([border+size*i,h-border])
+    pos.push([sizes.margin+sizes.checker*i,sizes.ctxHeight-sizes.margin])
   //tl
   for(let i = 0; i<6; i++)
-    pos.push([border+size*i,border])
+    pos.push([sizes.margin+sizes.checker*i,sizes.margin])
   //tr
   for(let i = 0; i<6; i++)
-    pos.push([border+size*i + w/2 + border*2,border])
+    pos.push([sizes.margin+sizes.checker*i + sizes.ctxWidth/2 + sizes.margin * 2,sizes.margin])
+
   
 }
 
 const draw = () => {
   ctx.fillStyle = colors.light
-  ctx.fillRect(0,0,w,h)
+  ctx.fillRect(0,0,sizes.ctxWidth,sizes.ctxHeight)
  
   // CONES 
   pos.forEach(([x,y],i) => {
     ctx.fillStyle = colors.cone    
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineTo(x+size, y);
+    ctx.lineTo(x+sizes.checker, y);
     if(i < 12)
-      ctx.lineTo(x+size/2, y - 250);
+      ctx.lineTo(x+sizes.checker/2, y - sizes.cone);
     else
-      ctx.lineTo(x+size/2, y + 250);     
+      ctx.lineTo(x+sizes.checker/2, y + sizes.cone);     
     ctx.fill();
     
     ctx.fillStyle = "red"
@@ -60,11 +61,11 @@ const draw = () => {
 
   // BORDER
   ctx.strokeStyle = colors.line
-  ctx.strokeRect(border,border,w-border*2,h-border*2)
+  ctx.strokeRect(sizes.margin,sizes.margin,sizes.ctxWidth-sizes.margin*2,sizes.ctxHeight-sizes.margin*2)
   
   // MID
   ctx.fillStyle = colors.dark
-  ctx.fillRect(w/2 - 25,0,50,h)
+  ctx.fillRect(sizes.ctxWidth/2 - 25,0,50,sizes.ctxHeight)
 }
 
 generateBoardInitPositions()
