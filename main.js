@@ -1,7 +1,19 @@
-
-const white= [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
-const black= [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
-
+class Checker {
+  constructor(color,position){
+    this.color = color
+    this.position = position
+  }
+  draw() {
+    const [x,y] = pos[this.position]
+    ctx.fillStyle = colors[this.color]
+    ctx.beginPath();
+    if(this.position<12)
+      ctx.arc(x+sizes.checker/2, y-sizes.checker/2 , sizes.checker/2, 0, 2 * Math.PI);
+    else 
+      ctx.arc(x+sizes.checker/2, y+sizes.checker/2 , sizes.checker/2, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+}
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext("2d")
 const sizes = {
@@ -22,7 +34,6 @@ const colors = {
 
 const pos = []
 const generateBoardInitPositions = () => {
-  
   //br
   for(let i = 5; i>=0; i--)
     pos.push([sizes.margin+sizes.checker*i + sizes.ctxWidth/2 + sizes.margin*2,sizes.ctxHeight-sizes.margin])
@@ -35,8 +46,6 @@ const generateBoardInitPositions = () => {
   //tr
   for(let i = 0; i<6; i++)
     pos.push([sizes.margin+sizes.checker*i + sizes.ctxWidth/2 + sizes.margin * 2,sizes.margin])
-
-  
 }
 
 const draw = () => {
@@ -66,7 +75,14 @@ const draw = () => {
   // MID
   ctx.fillStyle = colors.dark
   ctx.fillRect(sizes.ctxWidth/2 - 25,0,50,sizes.ctxHeight)
+  
+  // WHITE
+  white.forEach(checker => checker.draw())
 }
+
+const white= 
+  [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
+  .map(pos => new Checker('white',pos))  
 
 generateBoardInitPositions()
 
