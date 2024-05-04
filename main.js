@@ -1,4 +1,6 @@
-const player= [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
+
+const white= [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
+const black= [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
 
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext("2d")
@@ -17,19 +19,23 @@ const colors = {
 
 const pos = []
 
-const generateDefaultPositions = () => {
-  //bl
-  for(let i = 0; i<6; i++)
-    pos.push([border+size*i,h-border])
+
+
+const generateBoardInitPositions = () => {
+  
   //br
-  for(let i = 0; i<6; i++)
+  for(let i = 5; i>=0; i--)
     pos.push([border+size*i + w/2 + border*2,h-border])
+  //bl
+  for(let i = 5; i>=0; i--)
+    pos.push([border+size*i,h-border])
   //tl
   for(let i = 0; i<6; i++)
     pos.push([border+size*i,border])
   //tr
   for(let i = 0; i<6; i++)
     pos.push([border+size*i + w/2 + border*2,border])
+  
 }
 
 const draw = () => {
@@ -37,8 +43,8 @@ const draw = () => {
   ctx.fillRect(0,0,w,h)
  
   // CONES 
-  ctx.fillStyle = colors.cone
   pos.forEach(([x,y],i) => {
+    ctx.fillStyle = colors.cone    
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineTo(x+size, y);
@@ -47,6 +53,9 @@ const draw = () => {
     else
       ctx.lineTo(x+size/2, y + 250);     
     ctx.fill();
+    
+    ctx.fillStyle = "red"
+    ctx.fillText(i, x, y )
   })
 
   // BORDER
@@ -58,6 +67,6 @@ const draw = () => {
   ctx.fillRect(w/2 - 25,0,50,h)
 }
 
-generateDefaultPositions()
+generateBoardInitPositions()
 
 draw()
