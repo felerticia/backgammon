@@ -1,6 +1,11 @@
 
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext("2d")
+
+ctx.font = '16px Arial';
+ctx.textAlign = 'center'
+
+
 const sizes = {
   ctxWidth : canvas.width, //800
   ctxHeight : canvas.height, //600
@@ -51,7 +56,7 @@ const drawBoard = () => {
     ctx.fill();
     
     ctx.fillStyle = "red"
-    ctx.fillText(i, x, y )
+    ctx.fillText(i, x+10, y )
   })
 
   // BORDER
@@ -71,18 +76,30 @@ const drawChecker = (color,position,count) => {
   ctx.fillStyle = colors[color]
   ctx.beginPath();
   if(position<12){
-    for (let i=0; i<count; i++){
-      ctx.arc(x+sizes.marble/2 + sizes.margin/2 , (y-sizes.marble/2) - sizes.marble*i , sizes.marble/2, 0, 2 * Math.PI);
-      
-    }
+    for (let i=0; i<Math.min(5,count); i++){
+      ctx.arc(x+sizes.marble/2 + sizes.margin/2 , (y-sizes.marble/2) - sizes.marble*i , sizes.marble/2, 0, 2 * Math.PI);}
   }
   else {
-    for (let i=0; i<count; i++){
-    
+    for (let i=0; i<Math.min(5,count); i++){
     ctx.arc(x+sizes.marble/2 + sizes.margin/2 , y+sizes.marble/2 + sizes.marble*i , sizes.marble/2, 0, 2 * Math.PI);
     }
   }
   ctx.fill();
+  
+  if(count > 5){
+      ctx.save()
+      ctx.font = '24px Arial';
+      ctx.fillStyle = "red"
+    if (position<12){
+      ctx.fillText(count, x+sizes.marble/2 + sizes.margin/2 , (y-sizes.marble/2) - sizes.marble*4 + 8 )
+      
+    }
+    else{
+      ctx.fillText(count, x+sizes.marble/2 + sizes.margin/2 , (y-sizes.marble/2) + sizes.marble*5 + 8 )
+      
+    }
+      ctx.restore()
+    }
 }
 
 generateBoardInitPositions()
