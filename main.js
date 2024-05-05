@@ -36,6 +36,7 @@ const black = {
   16: 3,
   18: 5,
 };
+let dice = []
 
 const generateBoardInitPositions = () => {
   //br
@@ -162,6 +163,64 @@ const drawChecker = (color,position, count) => {
   }
 };
 
+const rollDice = () => {
+  const v1 = Math.floor(Math.random() * 6) + 1
+  const v2 = Math.floor(Math.random() * 6) + 1
+  dice=[v1,v2]
+}
+
+const drawDiceDots = (l,t,num) => {
+  ctx.beginPath()
+  ctx.fillStyle="white"
+ if(num === 1 || num === 3 || num === 5) {
+  //m  
+  ctx.arc(l + sizes.checker*.5,t+ sizes.checker*.5,sizes.checker/10,0,Math.PI*2)
+  ctx.fill()
+  ctx.closePath()
+ }
+  
+  //tr,bl
+  if (num !== 1){
+    ctx.beginPath()
+    ctx.arc(l + sizes.checker*.8,t+ sizes.checker*.2,sizes.checker/10,0,Math.PI*2)
+    ctx.fill()
+    ctx.arc(l + sizes.checker*.2,t+ sizes.checker*.8,sizes.checker/10,0,Math.PI*2)
+  ctx.fill()
+    ctx.closePath()
+  }
+  
+  //tl,br
+  if (num > 3){
+  ctx.beginPath()
+  ctx.arc(l + sizes.checker*.8,t+ sizes.checker*.8,sizes.checker/10,0,Math.PI*2)
+  ctx.fill()
+    ctx.arc(l + sizes.checker*.2,t+ sizes.checker*.2,sizes.checker/10,0,Math.PI*2)
+  ctx.fill()
+  ctx.closePath()
+  }
+
+  
+  //r,l
+  if (num === 6){
+    ctx.beginPath()
+    ctx.arc(l + sizes.checker*.8,t+ sizes.checker*.5,sizes.checker/10,0,Math.PI*2)
+    ctx.fill()
+    
+    ctx.arc(l + sizes.checker*.2,t+ sizes.checker*.5,sizes.checker/10,0,Math.PI*2)
+    ctx.fill()
+    ctx.closePath() 
+  }
+}
+const drawDice = () => {
+  dice.forEach((d,i) => {
+    ctx.fillStyle="red"
+    const l = sizes.ctxWidth/4 - sizes.margin - sizes.checker/2 + ((i-.5)*sizes.checker*2)
+    const t = (sizes.ctxHeight - sizes.checker) /2 
+    ctx.fillRect(l,t,sizes.checker,sizes.checker)
+    drawDiceDots(l,t,d)
+  })
+}
+
 generateBoardInitPositions();
 drawBoard();
 
@@ -173,3 +232,6 @@ Object.entries(black).forEach(([position, count]) => {
   drawChecker("black",Number(position), count);
 });
 
+
+rollDice()
+drawDice()
