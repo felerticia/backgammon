@@ -1,27 +1,13 @@
-class Checker {
-  constructor(color,position){
-    this.color = color
-    this.position = position
-  }
-  draw() {
-    const [x,y] = pos[this.position]
-    ctx.fillStyle = colors[this.color]
-    ctx.beginPath();
-    if(this.position<12)
-      ctx.arc(x+sizes.checker/2, y-sizes.checker/2 , sizes.checker/2, 0, 2 * Math.PI);
-    else 
-      ctx.arc(x+sizes.checker/2, y+sizes.checker/2 , sizes.checker/2, 0, 2 * Math.PI);
-    ctx.fill();
-  }
-}
+
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext("2d")
 const sizes = {
   ctxWidth : canvas.width, //800
   ctxHeight : canvas.height, //600
-  checker : 60,
+  marble : 50,
   margin : 10,
-  cone: .4 * canvas.height,
+  coneW: 60,
+  coneH: .4 * canvas.height,
 }
 
 const colors = {
@@ -36,19 +22,19 @@ const pos = []
 const generateBoardInitPositions = () => {
   //br
   for(let i = 5; i>=0; i--)
-    pos.push([sizes.margin+sizes.checker*i + sizes.ctxWidth/2 + sizes.margin*2,sizes.ctxHeight-sizes.margin])
+    pos.push([sizes.margin+sizes.coneW*i + sizes.ctxWidth/2 + sizes.margin*2,sizes.ctxHeight-sizes.margin])
   //bl
   for(let i = 5; i>=0; i--)
-    pos.push([sizes.margin+sizes.checker*i,sizes.ctxHeight-sizes.margin])
+    pos.push([sizes.margin+sizes.coneW*i,sizes.ctxHeight-sizes.margin])
   //tl
   for(let i = 0; i<6; i++)
-    pos.push([sizes.margin+sizes.checker*i,sizes.margin])
+    pos.push([sizes.margin+sizes.coneW*i,sizes.margin])
   //tr
   for(let i = 0; i<6; i++)
-    pos.push([sizes.margin+sizes.checker*i + sizes.ctxWidth/2 + sizes.margin * 2,sizes.margin])
+    pos.push([sizes.margin+sizes.coneW*i + sizes.ctxWidth/2 + sizes.margin * 2,sizes.margin])
 }
 
-const draw = () => {
+const drawBoard = () => {
   ctx.fillStyle = colors.light
   ctx.fillRect(0,0,sizes.ctxWidth,sizes.ctxHeight)
  
@@ -57,11 +43,11 @@ const draw = () => {
     ctx.fillStyle = colors.cone    
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineTo(x+sizes.checker, y);
+    ctx.lineTo(x+sizes.coneW, y);
     if(i < 12)
-      ctx.lineTo(x+sizes.checker/2, y - sizes.cone);
+      ctx.lineTo(x+sizes.coneW/2, y - sizes.coneH);
     else
-      ctx.lineTo(x+sizes.checker/2, y + sizes.cone);     
+      ctx.lineTo(x+sizes.coneW/2, y + sizes.coneH);     
     ctx.fill();
     
     ctx.fillStyle = "red"
@@ -76,14 +62,40 @@ const draw = () => {
   ctx.fillStyle = colors.dark
   ctx.fillRect(sizes.ctxWidth/2 - 25,0,50,sizes.ctxHeight)
   
-  // WHITE
-  white.forEach(checker => checker.draw())
+
 }
 
-const white= 
-  [5,5,5,5,5,7,7,7,12,12,12,12,12,23,23]
-  .map(pos => new Checker('white',pos))  
+const drawChecker = (color,position,count) => {
+  if(!count) return
+  const [x,y] = pos[position]
+  ctx.fillStyle = colors[color]
+  ctx.beginPath();
+  if(position<12){
+    for (let i=0; i<count; i++){
+      ctx.arc(x+sizes.marble/2 + sizes.margin/2 , (y-sizes.marble/2) - sizes.marble*i , sizes.marble/2, 0, 2 * Math.PI);
+      
+    }
+  }
+  else {
+    for (let i=0; i<count; i++){
+    
+    ctx.arc(x+sizes.marble/2 + sizes.margin/2 , y+sizes.marble/2 + sizes.marble*i , sizes.marble/2, 0, 2 * Math.PI);
+    }
+  }
+  ctx.fill();
+}
 
 generateBoardInitPositions()
 
-draw()
+drawBoard()
+
+const white= {
+  5:5,
+  7:3,
+  12:5,
+  23:2
+}
+  
+Object.entries(white).forEach(([key,value]) => {
+  drawChecker('white',Number(key),value)
+})
