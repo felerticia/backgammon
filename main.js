@@ -166,7 +166,12 @@ const drawChecker = (color,position, count) => {
 const rollDice = () => {
   const v1 = Math.floor(Math.random() * 6) + 1
   const v2 = Math.floor(Math.random() * 6) + 1
-  dice=[v1,v2]
+  if(v1===v2){
+    dice=[v1,v1,v1,v1]
+  }else {
+    dice=[v1,v2]
+  }
+    
 }
 
 const drawDiceDots = (l,t,num) => {
@@ -214,7 +219,8 @@ const drawDiceDots = (l,t,num) => {
 const drawDice = () => {
   dice.forEach((d,i) => {
     ctx.fillStyle="red"
-    const l = sizes.ctxWidth/4 - sizes.margin - sizes.checker/2 + ((i-.5)*sizes.checker*2)
+    let l = sizes.ctxWidth/(dice.length === 2 ? 4 : 8) - sizes.margin - sizes.checker/2 + ((i-.5)*sizes.checker*2) 
+    
     const t = (sizes.ctxHeight - sizes.checker) /2 
     ctx.fillRect(l,t,sizes.checker,sizes.checker)
     drawDiceDots(l,t,d)
