@@ -37,6 +37,7 @@ const black = {
   18: 5,
 };
 let dice = []
+let turn = "white"
 
 const generateBoardInitPositions = () => {
   //br
@@ -173,7 +174,6 @@ const rollDice = () => {
   }
     
 }
-
 const drawDiceDots = (l,t,num) => {
   ctx.beginPath()
   ctx.fillStyle="white"
@@ -219,7 +219,7 @@ const drawDiceDots = (l,t,num) => {
 const drawDice = () => {
   dice.forEach((d,i) => {
     ctx.fillStyle="red"
-    let l = sizes.ctxWidth/(dice.length === 2 ? 4 : 8) - sizes.margin - sizes.checker/2 + ((i-.5)*sizes.checker*2) 
+    let l = sizes.ctxWidth/(dice.length === 2 ? 4 : 6) - sizes.margin - sizes.checker/2 + ((i-.5)*sizes.checker*(dice.length === 2 ? 2 : 1.5)) 
     
     const t = (sizes.ctxHeight - sizes.checker) /2 
     ctx.fillRect(l,t,sizes.checker,sizes.checker)
@@ -238,6 +238,6 @@ Object.entries(black).forEach(([position, count]) => {
   drawChecker("black",Number(position), count);
 });
 
-
 rollDice()
 drawDice()
+
