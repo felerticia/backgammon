@@ -36,7 +36,18 @@ const black = {
   16: 3,
   18: 5,
 };
+
 let dice = []
+let activeDice = 0;
+let playedDice = 0
+const diceClickRect = {
+  x:sizes.margin * 2,
+  y:(sizes.ctxHeight- sizes.checker - sizes.margin) /2 -2,
+  w:sizes.ctxWidth / 2 - sizes.checker - sizes.margin,
+  h:sizes.checker + sizes.margin + 4
+}
+
+
 let turn = "white"
 
 const generateBoardInitPositions = () => {
@@ -59,6 +70,11 @@ const generateBoardInitPositions = () => {
       sizes.margin,
     ]);
 };
+
+const isInsideRect = (mouseX, mouseY,target) => {
+  return mouseX >= target.x && mouseX <= target.x + target.w &&
+         mouseY >= target.y && mouseY <= target.y + target.h;
+}
 
 const drawBoard = () => {
   ctx.fillStyle = colors.light;
@@ -219,15 +235,35 @@ const drawDiceDots = (l,t,num) => {
 const drawDice = () => {
   dice.forEach((d,i) => {
     ctx.fillStyle="red"
-    let l = sizes.ctxWidth/(dice.length === 2 ? 4 : 6) - sizes.margin - sizes.checker/2 + ((i-.5)*sizes.checker*(dice.length === 2 ? 2 : 1.5)) 
+    const l = sizes.ctxWidth/(dice.length === 2 ? 4 : 6) - sizes.margin - sizes.checker/2 + ((i-.5)*sizes.checker*(dice.length === 2 ? 2 : 1.5)) 
     
     const t = (sizes.ctxHeight - sizes.checker) /2 
     ctx.fillRect(l,t,sizes.checker,sizes.checker)
     drawDiceDots(l,t,d)
   })
 }
+const drawActiveDice = () => {
+  if(dice.length === 4)
+    return
+  
+  const l = sizes.ctxWidth/4 - sizes.margin - sizes.checker/2 + ((activeDice-.5)*sizes.checker*2) 
+  const t = (sizes.ctxHeight - sizes.checker) /2 
+  ctx.strokeRect(l-sizes.margin/2,t-sizes.margin/2,sizes.checker+sizes.margin,sizes.checker+sizes.margin)
+}
+const switchActiveDice = () => {
+  if (playedDice !== 0) return
+    
+  activeDice = activeDice === 0 ? 1 : 0
+    
+ ctx.fillStyle = colors.light
+    ctx.fillRect(diceClickRect.x,diceClickRect.y,diceClickRect.w,diceClickRect.h)
+    drawDice()
+drawActiveDice()
+}
 
 generateBoardInitPositions();
+
+
 drawBoard();
 
 Object.entries(white).forEach(([position, count]) => {
@@ -240,4 +276,17 @@ Object.entries(black).forEach(([position, count]) => {
 
 rollDice()
 drawDice()
+drawActiveDice()
 
+
+canvas.addEventListener('click', function(event) {
+  const mouseX = event.clientX - canvas.getBoundingClientRect().left;
+  const mouseY = event.clientY - canvas.getBoundingClientRect().top;
+  
+
+
+  // Clicked on dice
+  if (isInsideRect(mouseX, mouseY,diceClickRect) && dice.length === 2) {
+    switchActiveDice()
+  }
+});
