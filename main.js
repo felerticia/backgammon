@@ -47,6 +47,35 @@ const diceClickRect = {
   h:sizes.checker + sizes.margin + 4
 }
 
+const clickedOnCone = (mouseX, mouseY) =>{
+  //  0-5   left
+  //  6     bar
+  //  7-12  right
+  const x = Math.floor((mouseX - sizes.margin) / sizes.coneW)
+
+  // 0-1    top
+  // 1.3 +  bottom
+  const y = (mouseY - sizes.margin) / (sizes.checker * 5)
+  
+  if (x <= 5 && y <=1){
+    return x + 12
+  }
+  if (x===6){
+    return 24
+  }
+  if (x >= 6 && y <=1){
+    return x + 11
+  }
+  
+  if (x <= 5 && y >=1.3){
+    return 11 - x
+  }
+  if (x >= 6 && y >=1.3){
+    return  12 - x
+  }
+  
+  return -1
+}
 
 let turn = "white"
 
@@ -255,14 +284,13 @@ const switchActiveDice = () => {
     
   activeDice = activeDice === 0 ? 1 : 0
     
- ctx.fillStyle = colors.light
-    ctx.fillRect(diceClickRect.x,diceClickRect.y,diceClickRect.w,diceClickRect.h)
-    drawDice()
-drawActiveDice()
+  ctx.fillStyle = colors.light
+  ctx.fillRect(diceClickRect.x,diceClickRect.y,diceClickRect.w,diceClickRect.h)
+  drawDice()
+  drawActiveDice()
 }
 
 generateBoardInitPositions();
-
 
 drawBoard();
 
@@ -278,15 +306,18 @@ rollDice()
 drawDice()
 drawActiveDice()
 
-
 canvas.addEventListener('click', function(event) {
   const mouseX = event.clientX - canvas.getBoundingClientRect().left;
   const mouseY = event.clientY - canvas.getBoundingClientRect().top;
   
-
-
   // Clicked on dice
   if (isInsideRect(mouseX, mouseY,diceClickRect) && dice.length === 2) {
     switchActiveDice()
+    return
+  }
+  
+  const coneIdx = clickedOnCone(mouseX, mouseY)
+  if (coneIdx === -1){
+    return
   }
 });
